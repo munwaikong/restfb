@@ -5,9 +5,16 @@
     <artifactId>restfb</artifactId>
     <packaging>jar</packaging>
     <name>RestFB</name>
-    <version>1.6.16</version>
+    <version>1.8.0</version>
     <description>RestFB is a simple and flexible Facebook Graph API and Old REST API client written in Java.</description>
     <url>http://restfb.com</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.build.source>1.6</project.build.source>
+        <project.build.target>1.6</project.build.target>
+    </properties>
 
     <licenses>
         <license>
@@ -47,7 +54,8 @@
             <id>nbartels</id>
             <name>Norbert Bartels</name>
             <url>http://www.phpmonkeys.de</url>
-            <roles>
+	    <roles>
+		<role>Maintainer</role>
                 <role>Developer</role>
             </roles>
             <timezone>Europe/Berlin</timezone>
@@ -55,24 +63,24 @@
     </developers>
 
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>2.17</version>
-            <type>maven-plugin</type>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.14.4</version>
-            <scope>provided</scope>
-        </dependency>
+	<dependency>
+	    <groupId>junit</groupId>
+	    <artifactId>junit</artifactId>
+	    <version>4.11</version>
+	    <scope>test</scope>
+	</dependency>
+	<dependency>
+	    <groupId>org.projectlombok</groupId>
+	    <artifactId>lombok</artifactId>
+	    <version>1.14.4</version>
+	    <scope>provided</scope>
+	</dependency>
+	<dependency>
+	    <groupId>org.skyscreamer</groupId>
+	    <artifactId>jsonassert</artifactId>
+	    <version>1.2.3</version>
+	    <scope>test</scope>
+	</dependency>
     </dependencies>
 
     <build>
@@ -91,8 +99,8 @@
                 <configuration>
                     <fork>true</fork>
                     <encoding>UTF-8</encoding>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>${project.build.source}</source>
+                    <target>${project.build.target}</target>
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
                 </configuration>

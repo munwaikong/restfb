@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Mark Allen.
+ * Copyright (c) 2010-2015 Mark Allen.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -86,8 +86,9 @@ public interface WebRequestor {
      */
     @Override
     public String toString() {
-      if (isBlank(getBody()))
+      if (isBlank(getBody())) {
         return format("HTTP status code %d and an empty response body.", getStatusCode());
+      }
       return format("HTTP status code %d and response body: %s", getStatusCode(), getBody());
     }
   }
@@ -131,4 +132,15 @@ public interface WebRequestor {
    *           If an error occurs while performing the {@code POST}.
    */
   Response executePost(String url, String parameters, BinaryAttachment... binaryAttachments) throws IOException;
+
+  /**
+   * Given a Facebook API endpoint URL and parameter string, execute a {@code DELETE} to the endpoint URL.
+   * 
+   * @param url
+   *          The URL to submit the {@code DELETE} to.
+   * @return HTTP response data.
+   * @throws IOException
+   *           If an error occurs while performing the {@code DELETE}.
+   */
+  Response executeDelete(String url) throws IOException;
 }

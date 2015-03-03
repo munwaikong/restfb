@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Mark Allen.
+ * Copyright (c) 2010-2015 Mark Allen.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -294,7 +294,7 @@ public class JsonMapperToJavaTest extends AbstractJsonMapperTests {
     assertTrue(post1.getLikes() == null);
 
     Post post2 = jsonMapper.toJavaObject(jsonFromClasspath("post-with-likes-v2"), Post.class);
-    assertTrue(post2.getLikes().getCount() == 49);
+    assertTrue(post2.getLikes().getTotalCount() == 49);
     assertTrue(post2.getLikesCount() == 49);
   }
 

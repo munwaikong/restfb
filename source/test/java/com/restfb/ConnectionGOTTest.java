@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Norbert Bartels
+ * Copyright (c) 2010-2015 Norbert Bartels
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -46,7 +46,7 @@ public class ConnectionGOTTest extends AbstractJsonMapperTests {
       }
       Likes ls = post.getLikes();
       if (null != ls && !ls.getData().isEmpty()) {
-        Assert.assertTrue(ls.getCount() > 0);
+        Assert.assertTrue(ls.getTotalCount() > 0);
       }
     }
     assertEquals(25, postPage.size());

@@ -1,3 +1,55 @@
+1.8.0 (February 13, 2015)
+
+* Issue #93: obtain user access token method added
+  Thanks to Johno Crawford
+* Issue #173: http delete added
+  Thanks to Eric Hydrick
+* Issue #176: DefaulFacebookClient - missing constructor added
+  Thanks to Denis Bardadym
+* Issue #177: User age-range added
+* Issue #179 + #171: restfb website moved to gh pages
+  Thanks for the input to Marcel Stör
+* Issue #181: binary post Integration test added
+  Thanks to Rick Fischer 
+
+1.7.1 (January 16, 2015)
+
+* Issue #149: can_hide and is_hidden fields added
+  Thanks for input and code snippets and review to Aurelie Vache
+* Issue #154: deprecated constructors flagged with annotation
+* Issue #155: version 1.7.1 prepared
+* Issue #156: Version Enum fixed
+  Thanks to Aurelie Vache
+* Issue #158: experimental high level API added
+* Issue #160: old FQL query and multiquery method set to deprecated
+* Issue #161: object field added to comment
+* Issue #164: additional details added to facebook exception
+  Thanks to Chandler
+* Issue #166: Copyright updated
+* Issue #168: User.Education can handle String-only year
+  Thanks to @suryaganeshv
+* Issue #169: unittest fixed for java 8
+
+1.7.0 (November 7, 2014)
+
+* Issue #7: speed up date parsing, DateFormatStrategies added
+  Thanks for input and code review to @inthepocket, Marcel Stoer, Mike Hazelwood, Peter Vahlstrup
+* Issue #139: performance boost section added to website
+* Issue #58: JsonArray serializable
+  Thanks to @EpiXl33t, @rackom
+* Issue #44: DefaulWebRequestor should not close binaryAttachment stream
+  Thanks to Marcel Stoer
+* Issue #138: Thread type added
+* Issue #145, Issue #146, Issue #150: Graph API 2.2 added
+* Issue #133: comments and likes total count API unified
+* Issue #143: API Versioning added to other endpoints
+  Thanks to @munwaikong
+* Issue #48: make types mutable
+  Thanks to Courtney Robinson, Broc Seib, Marcel Stoer
+* Issue #144: API check util added
+* Issue #136: integration test configuration enhanced
+* Issue #130: URL type replaced by a current URL type implementation
+
 1.6.16 (September 22, 2014)
 
 * lombok library added to generate getter automatically

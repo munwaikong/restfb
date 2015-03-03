@@ -3,6 +3,8 @@
 
 RestFB is a pure Java Facebook Graph API and Old REST API client with no external dependencies.
 
+It was created by [Mark Allen](http://revetkn.com) and is maintained by [Norbert Bartels](http://www.phpmonkeys.de/) along with a worldwide team of contributors.
+
 ## Licensing
 
 RestFB uses other open-source software - see the "licensing" directory. 
@@ -10,19 +12,9 @@ RestFB itself is open source software released under the terms of the MIT Licens
 
 ## Installation
 
-RestFB is a single JAR - just drop `restfb-1.6.16.jar` into your app and you're ready to go.
+RestFB is a single JAR - just drop it into your app and you're ready to go. Download it from Maven Central:
 
-Download it here: http://restfb.com/downloads/restfb-1.6.16.jar
-
-Or, if you're using [Maven](http://maven.apache.org/), you can add RestFB to your project like this:
-
-```xml
-<dependency>
-  <groupId>com.restfb</groupId>
-  <artifactId>restfb</artifactId>
-  <version>1.6.16</version>
-</dependency>
-```
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.restfb/restfb/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.restfb/restfb/)
 
 ## Building it Yourself
 

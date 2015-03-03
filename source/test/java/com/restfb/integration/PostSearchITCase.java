@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Norbert Bartels
+ * Copyright (c) 2010-2015 Norbert Bartels
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -21,6 +21,7 @@
 
 package com.restfb.integration;
 
+import com.restfb.integration.base.RestFbIntegrationTestBase;
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.Parameter;
@@ -35,17 +36,17 @@ public class PostSearchITCase extends RestFbIntegrationTestBase {
 
   @Test
   public void tesPostSearchV1_0() {
-    DefaultFacebookClient facebookClient = new DefaultFacebookClient(getAccessToken(), Version.VERSION_1_0);
+    DefaultFacebookClient facebookClient = new DefaultFacebookClient(getTestSettings().getUserAccessToken(), Version.VERSION_1_0);
     Connection publicSearch =
         facebookClient.fetchConnection("search", Post.class, Parameter.with("q", "watermelon"),
           Parameter.with("type", "post"));
 
-    assertNotNull(((Post) publicSearch.getData().get(0)).getMessage());
+    assertNotNull(((Post) publicSearch.getData().get(0)).getId());
   }
 
   @Test(expected = FacebookOAuthException.class)
   public void tesPostSearchV2_0() {
-    DefaultFacebookClient facebookClient = new DefaultFacebookClient(getAccessToken(), Version.VERSION_2_0);
+    DefaultFacebookClient facebookClient = new DefaultFacebookClient(getTestSettings().getUserAccessToken(), Version.VERSION_2_0);
     Connection publicSearch =
         facebookClient.fetchConnection("search", Post.class, Parameter.with("q", "watermelon"),
           Parameter.with("type", "post"));

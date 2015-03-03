@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Norbert Bartels
+ * Copyright (c) 2010-2015 Norbert Bartels
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -21,10 +21,12 @@
 package com.restfb.types;
 
 import com.restfb.Facebook;
+import com.restfb.JsonMapper.JsonMappingCompleted;
 import static com.restfb.util.DateUtils.toDateFromLongFormat;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * DeAuth type, returned on deauthorization callback
@@ -33,22 +35,26 @@ import lombok.Getter;
  */
 public class DeAuth implements Serializable {
 
-  @Getter
+  @Getter @Setter
   @Facebook
   private String algorithm;
 
   @Facebook("issued_at")
-  private String issuedAt;
+  private String rawIssuedAt;
+  
+  @Getter @Setter
+  private Date issuedAt;
 
-  @Getter
+  @Getter @Setter
   @Facebook("profile_id")
   private String profileId;
 
-  @Getter
+  @Getter @Setter
   @Facebook("user_id")
   private String userId;
 
-  public Date getIssuedAt() {
-    return toDateFromLongFormat(issuedAt);
+  @JsonMappingCompleted
+  void convertTime() {
+      issuedAt = toDateFromLongFormat(rawIssuedAt);
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Mark Allen.
+ * Copyright (c) 2010-2015 Mark Allen.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,11 @@
 package com.restfb.types;
 
 import com.restfb.Facebook;
+import java.util.ArrayList;
+import static java.util.Collections.unmodifiableList;
 import java.util.List;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Represents information about the place where an event occurred, for example a {@link Checkin} or {@link Photo}.
@@ -44,6 +47,7 @@ public class Place extends NamedFacebookType {
    * @return Location containing geographic information such as latitude, longitude, country, and other fields.
    */
   @Getter
+  @Setter
   @Facebook
   private Location location;
 
@@ -57,18 +61,30 @@ public class Place extends NamedFacebookType {
    * @since 1.6.12
    */
   @Getter
+  @Setter
   @Facebook("location")
   private String locationAsString;
 
+  @Facebook("category_list")
+  private List<Category> categoryList = new ArrayList<Category>();
+
   /**
+   * List of other categories for this place.
    * 
-   * 
-   * @return list of categories
+   * @return List of other categories for this place.
    * @since 1.6.15
    */
-  @Getter
-  @Facebook("category_list")
-  private List<Category> categoryList;
+  public List<Category> getCategoryList() {
+    return unmodifiableList(categoryList);
+  }
+
+  public boolean addCategory(Category category) {
+    return categoryList.add(category);
+  }
+
+  public boolean removeCategory(Category category) {
+    return categoryList.remove(category);
+  }
 
   private static final long serialVersionUID = 1L;
 

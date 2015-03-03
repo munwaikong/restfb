@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Mark Allen.
+ * Copyright (c) 2010-2015 Mark Allen.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -168,6 +168,7 @@ public interface FacebookClient {
    * @deprecated As of 1.6.12, prefer {@link #executeFqlQuery(String, Class, Parameter...)} because it connects to the
    *             Graph API FQL endpoint instead of the legacy FQL endpoint.
    */
+  @Deprecated
   <T> List<T> executeQuery(String query, Class<T> objectType, Parameter... parameters);
 
   /**
@@ -192,6 +193,7 @@ public interface FacebookClient {
    * @deprecated As of 1.6.12, prefer {@link #executeFqlMultiquery(Map, Class, Parameter...)} because it connects to the
    *             Graph API FQL endpoint instead of the legacy FQL endpoint.
    */
+  @Deprecated
   <T> T executeMultiquery(Map<String, String> queries, Class<T> objectType, Parameter... parameters);
 
   /**
@@ -340,6 +342,27 @@ public interface FacebookClient {
    * @since 1.6
    */
   List<AccessToken> convertSessionKeysToAccessTokens(String appId, String secretKey, String... sessionKeys);
+
+  /**
+   * Obtains an access token which can be used to perform Graph API operations on behalf of a user.
+   * <p>
+   * See <a href="https://developers.facebook.com/docs/facebook-login/access-tokens">Access Tokens</a>.
+   *
+   * @param appId
+   *          The ID of the app for which you'd like to obtain an access token.
+   * @param appSecret
+   *          The secret for the app for which you'd like to obtain an access token.
+   * @param redirectUri
+   *          The redirect URI which was used to obtain the {@code verificationCode}.
+   * @param verificationCode
+   *          The verification code in the Graph API callback to the redirect URI.
+   * @return The access token for the user identified by {@code appId}, {@code appSecret}, {@code redirectUri}
+   * and {@code verificationCode}.
+   * @throws FacebookException
+   *           If an error occurs while attempting to obtain an access token.
+   * @since 1.8.0
+   */
+  AccessToken obtainUserAccessToken(String appId, String appSecret, String redirectUri, String verificationCode);
 
   /**
    * Obtains an access token which can be used to perform Graph API operations on behalf of an application instead of a

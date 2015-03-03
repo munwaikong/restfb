@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Norbert Bartels.
+ * Copyright (c) 2010-2015 Norbert Bartels.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,11 @@
 package com.restfb.types;
 
 import com.restfb.Facebook;
+import com.restfb.JsonMapper.JsonMappingCompleted;
 import static com.restfb.util.DateUtils.toDateFromLongFormat;
 import java.util.Date;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Represents the <a href="https://developers.facebook.com/docs/graph-api/reference/review">Review Graph API Type</a>
@@ -36,7 +38,17 @@ import lombok.Getter;
 public class Review extends FacebookType {
 
   @Facebook("created_time")
-  private String createdTime;
+  private String rawCreatedTime;
+
+  /**
+   * When the review was created.
+   * 
+   * @return when the review was created
+   * @since 1.6.16
+   */
+  @Getter
+  @Setter
+  private Date createdTime;
 
   /**
    * The user that created the review.
@@ -45,6 +57,7 @@ public class Review extends FacebookType {
    * @since 1.6.16
    */
   @Getter
+  @Setter
   @Facebook
   private NamedFacebookType from;
 
@@ -55,6 +68,7 @@ public class Review extends FacebookType {
    * @since 1.6.16
    */
   @Getter
+  @Setter
   @Facebook
   private String message;
 
@@ -65,6 +79,7 @@ public class Review extends FacebookType {
    * @since 1.6.16
    */
   @Getter
+  @Setter
   @Facebook
   private int rating;
 
@@ -75,17 +90,12 @@ public class Review extends FacebookType {
    * @since 1.6.16
    */
   @Getter
+  @Setter
   @Facebook
   private NamedFacebookType to;
 
-  /**
-   * When the review was created.
-   * 
-   * @return when the review was created
-   * @since 1.6.16
-   */
-  public Date getCreatedTime() {
-    return toDateFromLongFormat(createdTime);
+  @JsonMappingCompleted
+  void convertTime() {
+    createdTime = toDateFromLongFormat(rawCreatedTime);
   }
-
 }

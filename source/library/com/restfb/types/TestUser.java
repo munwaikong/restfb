@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Mark Allen.
+ * Copyright (c) 2010-2015 Mark Allen.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@ package com.restfb.types;
 
 import com.restfb.Facebook;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Represents the <a href="https://developers.facebook.com/docs/test_users">Test User type</a>.
@@ -41,6 +42,7 @@ public class TestUser extends FacebookType {
    * @return The test user's access token.
    */
   @Getter
+  @Setter
   @Facebook("access_token")
   private String accessToken;
 
@@ -50,6 +52,7 @@ public class TestUser extends FacebookType {
    * @return The test user's login url.
    */
   @Getter
+  @Setter
   @Facebook("login_url")
   private String loginUrl;
 
@@ -59,6 +62,7 @@ public class TestUser extends FacebookType {
    * @return The test user's email address.
    */
   @Getter
+  @Setter
   @Facebook
   private String email;
 
@@ -68,6 +72,7 @@ public class TestUser extends FacebookType {
    * @return The test user's password.
    */
   @Getter
+  @Setter
   @Facebook
   private String password;
 

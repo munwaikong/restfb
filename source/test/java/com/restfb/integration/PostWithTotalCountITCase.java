@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Norbert Bartels
+ * Copyright (c) 2010-2015 Norbert Bartels
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -18,8 +18,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.restfb.integration;
 
+import com.restfb.integration.base.RestFbIntegrationTestBase;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.Parameter;
 import com.restfb.Version;
@@ -33,14 +35,14 @@ public class PostWithTotalCountITCase extends RestFbIntegrationTestBase {
 
   @Test
   public void checkPostWithCommentsAndLikes() {
-    DefaultFacebookClient client = new DefaultFacebookClient(getAccessToken(), Version.VERSION_2_1);
+    DefaultFacebookClient client = new DefaultFacebookClient(getTestSettings().getUserAccessToken(), Version.VERSION_2_1);
     Post gotPost =
         client.fetchObject("74133697733_10152424266332734", Post.class,
           Parameter.with("fields", "from,to,likes.summary(true),comments.summary(true)"));
     assertNotNull(gotPost);
     assertTrue(gotPost.getLikesCount() > 0);
-    assertTrue(gotPost.getLikes().getCount() > 0);
-    assertEquals(gotPost.getLikesCount(), gotPost.getLikes().getCount());
+    assertTrue(gotPost.getLikes().getTotalCount() > 0);
+    assertEquals(gotPost.getLikesCount(), gotPost.getLikes().getTotalCount());
     assertTrue(gotPost.getComments().getTotalCount() > 0);
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Norbert Bartels
+ * Copyright (c) 2010-2015 Norbert Bartels
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -75,6 +75,13 @@ public class PostTest extends AbstractJsonMapperTests {
   @Test
   public void checkV2_1_LikesWithTotalCount() {
       Post examplePost = createJsonMapper().toJavaObject(jsonFromClasspath("v2_1/post-with-likes-totalcount"), Post.class);
-      assertEquals(33L, examplePost.getLikes().getCount().longValue());
+      assertEquals(33L, examplePost.getLikes().getTotalCount().longValue());
+  }
+  
+  @Test
+  public void checkV2_1_PortogueseText() {
+      Post examplePost = createJsonMapper().toJavaObject(jsonFromClasspath("v2_1/post-portoguese"), Post.class);
+      String message = "Esse carro \u00e9 maravilhoso.Deus n\u00e3o nos desampara.Obrigada Senhor.";
+      assertEquals(message, examplePost.getMessage());
   }
 }

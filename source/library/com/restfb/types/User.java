@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Mark Allen.
+ * Copyright (c) 2010-2015 Mark Allen.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,6 +38,7 @@ import static java.util.Collections.unmodifiableList;
 import java.util.Date;
 import java.util.List;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Represents the <a href="http://developers.facebook.com/docs/reference/api/user">User Graph API type</a>.
@@ -54,6 +55,7 @@ public class User extends NamedFacebookType {
    * @return The user's first name.
    */
   @Getter
+  @Setter
   @Facebook("first_name")
   private String firstName;
 
@@ -63,6 +65,7 @@ public class User extends NamedFacebookType {
    * @return The user's middle name.
    */
   @Getter
+  @Setter
   @Facebook("middle_name")
   private String middleName;
 
@@ -72,6 +75,7 @@ public class User extends NamedFacebookType {
    * @return The user's last name.
    */
   @Getter
+  @Setter
   @Facebook("last_name")
   private String lastName;
 
@@ -81,6 +85,7 @@ public class User extends NamedFacebookType {
    * @return A link to the user's profile.
    */
   @Getter
+  @Setter
   @Facebook
   private String link;
 
@@ -90,6 +95,7 @@ public class User extends NamedFacebookType {
    * @return The user's biographical snippet.
    */
   @Getter
+  @Setter
   @Facebook
   private String bio;
 
@@ -99,6 +105,7 @@ public class User extends NamedFacebookType {
    * @return The user's favorite quotes.
    */
   @Getter
+  @Setter
   @Facebook
   private String quotes;
 
@@ -108,6 +115,7 @@ public class User extends NamedFacebookType {
    * @return The user's blurb that appears under their profile picture.
    */
   @Getter
+  @Setter
   @Facebook
   private String about;
 
@@ -117,6 +125,7 @@ public class User extends NamedFacebookType {
    * @return The user's relationship status.
    */
   @Getter
+  @Setter
   @Facebook("relationship_status")
   private String relationshipStatus;
 
@@ -126,8 +135,19 @@ public class User extends NamedFacebookType {
    * @return The user's religion.
    */
   @Getter
+  @Setter
   @Facebook
   private String religion;
+
+  /**
+   * Unspecific age range that this person's age fits into.
+   * 
+   * @return The user's age range
+   */
+  @Getter
+  @Setter
+  @Facebook("age_range")
+  private AgeRange ageRange;
 
   /**
    * A link to the user's personal website.
@@ -135,6 +155,7 @@ public class User extends NamedFacebookType {
    * @return A link to the user's personal website.
    */
   @Getter
+  @Setter
   @Facebook
   private String website;
 
@@ -147,6 +168,7 @@ public class User extends NamedFacebookType {
    * @return The user's birthday as a {@code String}.
    */
   @Getter
+  @Setter
   @Facebook
   private String birthday;
 
@@ -156,6 +178,7 @@ public class User extends NamedFacebookType {
    * @return The proxied or contact email address granted by the user.
    */
   @Getter
+  @Setter
   @Facebook
   private String email;
 
@@ -165,6 +188,7 @@ public class User extends NamedFacebookType {
    * @return The user's timezone offset.
    */
   @Getter
+  @Setter
   @Facebook
   private Double timezone;
 
@@ -174,6 +198,7 @@ public class User extends NamedFacebookType {
    * @return User verification status.
    */
   @Getter
+  @Setter
   @Facebook
   private Boolean verified;
 
@@ -183,6 +208,7 @@ public class User extends NamedFacebookType {
    * @return The user's gender.
    */
   @Getter
+  @Setter
   @Facebook
   private String gender;
 
@@ -192,6 +218,7 @@ public class User extends NamedFacebookType {
    * @return The user's political affiliation.
    */
   @Getter
+  @Setter
   @Facebook
   private String political;
 
@@ -201,6 +228,7 @@ public class User extends NamedFacebookType {
    * @return The user's locale.
    */
   @Getter
+  @Setter
   @Facebook
   private String locale;
 
@@ -211,6 +239,7 @@ public class User extends NamedFacebookType {
    * @since 1.6.5
    */
   @Getter
+  @Setter
   @Facebook
   private String username;
 
@@ -224,6 +253,7 @@ public class User extends NamedFacebookType {
    * @since 1.6.16
    */
   @Getter
+  @Setter
   private Picture picture;
 
   /**
@@ -236,6 +266,7 @@ public class User extends NamedFacebookType {
    * @return The user's hometown.
    */
   @Getter
+  @Setter
   @Facebook
   private NamedFacebookType hometown;
 
@@ -251,6 +282,7 @@ public class User extends NamedFacebookType {
    * @return The user's current location.
    */
   @Getter
+  @Setter
   @Facebook
   private NamedFacebookType location;
 
@@ -260,11 +292,21 @@ public class User extends NamedFacebookType {
    * @return The user's significant other.
    */
   @Getter
+  @Setter
   @Facebook("significant_other")
   private NamedFacebookType significantOther;
 
   @Facebook("updated_time")
-  private String updatedTime;
+  private String rawUpdatedTime;
+
+  /**
+   * Date the user's profile was updated.
+   * 
+   * @return Date the user's profile was updated.
+   */
+  @Getter
+  @Setter
+  private Date updatedTime;
 
   /**
    * An anonymous, but unique identifier for the user.
@@ -272,6 +314,7 @@ public class User extends NamedFacebookType {
    * @return An anonymous, but unique identifier for the user.
    */
   @Getter
+  @Setter
   @Facebook("third_party_id")
   private String thirdPartyId;
 
@@ -285,8 +328,20 @@ public class User extends NamedFacebookType {
    * @since 1.6.12
    */
   @Getter
+  @Setter
   @Facebook
   private Currency currency;
+
+  /**
+   * This returns a string which is the same for this person across all the apps managed by the same Business Manager.
+   * 
+   * @return string which is the same for a person across all apps managed by one company
+   * @since 1.7.0
+   */
+  @Getter
+  @Setter
+  @Facebook("token_for_business")
+  private String tokenForBusiness;
 
   @Facebook("interested_in")
   private List<String> interestedIn = new ArrayList<String>();
@@ -328,6 +383,7 @@ public class User extends NamedFacebookType {
      * @return The employer for this job.
      */
     @Getter
+    @Setter
     @Facebook
     private NamedFacebookType employer;
 
@@ -337,6 +393,7 @@ public class User extends NamedFacebookType {
      * @return The location of this job.
      */
     @Getter
+    @Setter
     @Facebook
     private NamedFacebookType location;
 
@@ -346,6 +403,7 @@ public class User extends NamedFacebookType {
      * @return Position held at this job.
      */
     @Getter
+    @Setter
     @Facebook
     private NamedFacebookType position;
 
@@ -356,14 +414,33 @@ public class User extends NamedFacebookType {
      * @since 1.6.3
      */
     @Getter
+    @Setter
     @Facebook
     private String description;
 
     @Facebook("start_date")
-    private String startDate;
+    private String rawStartDate;
+
+    /**
+     * Date this job was started.
+     * 
+     * @return Date this job was started.
+     */
+    @Getter
+    @Setter
+    private Date startDate;
 
     @Facebook("end_date")
-    private String endDate;
+    private String rawEndDate;
+
+    /**
+     * Date this job ended.
+     * 
+     * @return Date this job ended.
+     */
+    @Getter
+    @Setter
+    private Date endDate;
 
     @Facebook
     private List<NamedFacebookType> with = new ArrayList<NamedFacebookType>();
@@ -395,24 +472,6 @@ public class User extends NamedFacebookType {
     }
 
     /**
-     * Date this job was started.
-     * 
-     * @return Date this job was started.
-     */
-    public Date getStartDate() {
-      return toDateFromMonthYearFormat(startDate);
-    }
-
-    /**
-     * Date this job ended.
-     * 
-     * @return Date this job ended.
-     */
-    public Date getEndDate() {
-      return toDateFromMonthYearFormat(endDate);
-    }
-
-    /**
      * Friends associated with this job.
      * 
      * @return Friends associated with this job.
@@ -420,6 +479,20 @@ public class User extends NamedFacebookType {
      */
     public List<NamedFacebookType> getWith() {
       return unmodifiableList(with);
+    }
+
+    public boolean addWith(NamedFacebookType friend) {
+      return with.add(friend);
+    }
+
+    public boolean removeWith(NamedFacebookType friend) {
+      return with.remove(friend);
+    }
+
+    @JsonMappingCompleted
+    void convertTime() {
+      startDate = toDateFromLongFormat(rawStartDate);
+      endDate = toDateFromLongFormat(rawEndDate);
     }
   }
 
@@ -437,6 +510,7 @@ public class User extends NamedFacebookType {
      * @return The school name and ID.
      */
     @Getter
+    @Setter
     @Facebook
     private NamedFacebookType school;
 
@@ -446,8 +520,23 @@ public class User extends NamedFacebookType {
      * @return Graduation year.
      */
     @Getter
+    @Setter
     @Facebook
     private NamedFacebookType year;
+
+    /**
+     * Description for this year.
+     * 
+     * It is possible for Facebook to return either this value or {@link #getYear()}. If {@link #getYear()} returns
+     * {@code null}, then check this method to see if it has data, e.g. {@code "1997"}.
+     * 
+     * @return Description for this year.
+     * @since 1.7.1
+     */
+    @Getter
+    @Setter
+    @Facebook("year")
+    private String yearAsString;
 
     /**
      * Degree acquired.
@@ -455,6 +544,7 @@ public class User extends NamedFacebookType {
      * @return Degree acquired.
      */
     @Getter
+    @Setter
     @Facebook
     private NamedFacebookType degree;
 
@@ -464,6 +554,7 @@ public class User extends NamedFacebookType {
      * @return Type of school.
      */
     @Getter
+    @Setter
     @Facebook
     private String type;
 
@@ -511,6 +602,14 @@ public class User extends NamedFacebookType {
       return unmodifiableList(concentration);
     }
 
+    public boolean addConcentration(NamedFacebookType minor) {
+      return concentration.add(minor);
+    }
+
+    public boolean removeConcentration(NamedFacebookType minor) {
+      return concentration.remove(minor);
+    }
+
     /**
      * Friends associated with this school.
      * 
@@ -521,6 +620,14 @@ public class User extends NamedFacebookType {
       return unmodifiableList(with);
     }
 
+    public boolean addWith(NamedFacebookType friend) {
+      return with.add(friend);
+    }
+
+    public boolean removeWith(NamedFacebookType friend) {
+      return with.remove(friend);
+    }
+
     /**
      * Classes taken at this school.
      * 
@@ -529,6 +636,14 @@ public class User extends NamedFacebookType {
      */
     public List<EducationClass> getClasses() {
       return unmodifiableList(classes);
+    }
+
+    public boolean addClasses(EducationClass eduClass) {
+      return classes.add(eduClass);
+    }
+
+    public boolean removeClasses(EducationClass eduClass) {
+      return classes.remove(eduClass);
     }
   }
 
@@ -548,6 +663,7 @@ public class User extends NamedFacebookType {
      * @return The description of this class.
      */
     @Getter
+    @Setter
     @Facebook
     private String description;
 
@@ -562,6 +678,14 @@ public class User extends NamedFacebookType {
       return unmodifiableList(with);
     }
 
+    public boolean addWith(NamedFacebookType friend) {
+      return with.add(friend);
+    }
+
+    public boolean removeWith(NamedFacebookType friend) {
+      return with.remove(friend);
+    }
+
   }
 
   public static class Picture implements Serializable {
@@ -573,6 +697,7 @@ public class User extends NamedFacebookType {
      * @since 1.6.16
      */
     @Getter
+    @Setter
     @Facebook
     private String url;
 
@@ -583,6 +708,7 @@ public class User extends NamedFacebookType {
      * @since 1.6.16
      */
     @Getter
+    @Setter
     @Facebook("is_silhouette")
     private Boolean isSilhouette;
 
@@ -593,6 +719,7 @@ public class User extends NamedFacebookType {
      * @since 1.6.16
      */
     @Getter
+    @Setter
     @Facebook
     private Integer height;
 
@@ -603,6 +730,7 @@ public class User extends NamedFacebookType {
      * @since 1.6.16
      */
     @Getter
+    @Setter
     @Facebook
     private Integer width;
 
@@ -638,6 +766,7 @@ public class User extends NamedFacebookType {
    * @since 1.6.3
    */
   public static class Sport extends NamedFacebookType {
+
     @Facebook
     private List<NamedFacebookType> with = new ArrayList<NamedFacebookType>();
 
@@ -650,6 +779,14 @@ public class User extends NamedFacebookType {
      */
     public List<NamedFacebookType> getWith() {
       return unmodifiableList(with);
+    }
+
+    public boolean addWith(NamedFacebookType withSport) {
+      return with.add(withSport);
+    }
+
+    public boolean removeWith(NamedFacebookType withSport) {
+      return with.remove(withSport);
     }
   }
 
@@ -667,6 +804,7 @@ public class User extends NamedFacebookType {
      * @return The ISO-4217-3 code for the user's preferred currency (defaulting to USD if the user hasn't set one).
      */
     @Getter
+    @Setter
     @Facebook("user_currency")
     private String userCurrency;
 
@@ -676,6 +814,7 @@ public class User extends NamedFacebookType {
      * @return The number of Facebook Credits that equate in value to one unit of {@code user_currency}.
      */
     @Getter
+    @Setter
     @Facebook("currency_exchange")
     private BigDecimal currencyExchange;
 
@@ -688,6 +827,7 @@ public class User extends NamedFacebookType {
      * @return The number of units of {@code user_currency} that equate in value to one Credit.
      */
     @Getter
+    @Setter
     @Facebook("currency_exchange_inverse")
     private BigDecimal currencyExchangeInverse;
 
@@ -700,6 +840,7 @@ public class User extends NamedFacebookType {
      * @return The number by which a price should be divided for display in {@code user_currency} units.
      */
     @Getter
+    @Setter
     @Facebook("currency_offset")
     private BigDecimal currencyOffset;
 
@@ -731,6 +872,29 @@ public class User extends NamedFacebookType {
 
   }
 
+  public static class AgeRange {
+
+    /**
+     * The lower bounds of the range for this person's age.
+     * 
+     * @return The lower bounds of the range for this person's age.
+     */
+    @Getter
+    @Setter
+    @Facebook
+    private Integer min;
+
+    /**
+     * The upper bounds of the range for this person's age.
+     * 
+     * @return The upper bounds of the range for this person's age.
+     */
+    @Getter
+    @Setter
+    @Facebook
+    private Integer max;
+  }
+
   /**
    * The user's birthday, typed to {@code java.util.Date} if possible.
    * 
@@ -743,13 +907,9 @@ public class User extends NamedFacebookType {
     return toDateFromShortFormat(birthday);
   }
 
-  /**
-   * Date the user's profile was updated.
-   * 
-   * @return Date the user's profile was updated.
-   */
-  public Date getUpdatedTime() {
-    return toDateFromLongFormat(updatedTime);
+  @JsonMappingCompleted
+  void convertTime() {
+    updatedTime = toDateFromLongFormat(rawUpdatedTime);
   }
 
   @JsonMappingCompleted
@@ -784,6 +944,14 @@ public class User extends NamedFacebookType {
     return unmodifiableList(interestedIn);
   }
 
+  public boolean addInterestedIn(String gender) {
+    return interestedIn.add(gender);
+  }
+
+  public boolean removeInterestedIn(String gender) {
+    return interestedIn.remove(gender);
+  }
+
   /**
    * What genders the user is interested in meeting.
    * 
@@ -791,6 +959,14 @@ public class User extends NamedFacebookType {
    */
   public List<String> getMeetingFor() {
     return unmodifiableList(meetingFor);
+  }
+
+  public boolean addMeetingFor(String gender) {
+    return meetingFor.add(gender);
+  }
+
+  public boolean removeMeetingFor(String gender) {
+    return meetingFor.remove(gender);
   }
 
   /**
@@ -802,6 +978,14 @@ public class User extends NamedFacebookType {
     return unmodifiableList(work);
   }
 
+  public boolean addWork(Work workHistoryItem) {
+    return work.add(workHistoryItem);
+  }
+
+  public boolean removeWork(Work workHistoryItem) {
+    return work.remove(workHistoryItem);
+  }
+
   /**
    * A list of the education history from the user's profile.
    * 
@@ -809,6 +993,14 @@ public class User extends NamedFacebookType {
    */
   public List<Education> getEducation() {
     return unmodifiableList(education);
+  }
+
+  public boolean addEducation(Education educationHistoryItem) {
+    return education.add(educationHistoryItem);
+  }
+
+  public boolean removeEducation(Education educationHistoryItem) {
+    return education.remove(educationHistoryItem);
   }
 
   /**
@@ -820,6 +1012,14 @@ public class User extends NamedFacebookType {
     return unmodifiableList(sports);
   }
 
+  public boolean addSport(Sport sportItem) {
+    return sports.add(sportItem);
+  }
+
+  public boolean removeSport(Sport sportItem) {
+    return sports.remove(sportItem);
+  }
+
   /**
    * A list of the favorite sports teams from the user's profile.
    * 
@@ -827,6 +1027,14 @@ public class User extends NamedFacebookType {
    */
   public List<NamedFacebookType> getFavoriteTeams() {
     return unmodifiableList(favoriteTeams);
+  }
+
+  public boolean addFavoriteTeam(NamedFacebookType team) {
+    return favoriteTeams.add(team);
+  }
+
+  public boolean removeFavoriteTeam(NamedFacebookType team) {
+    return favoriteTeams.remove(team);
   }
 
   /**
@@ -838,6 +1046,14 @@ public class User extends NamedFacebookType {
     return unmodifiableList(favoriteAthletes);
   }
 
+  public boolean addFavoriteAthlete(NamedFacebookType athlet) {
+    return favoriteAthletes.add(athlet);
+  }
+
+  public boolean removeFavoriteAthlete(NamedFacebookType athlet) {
+    return favoriteAthletes.remove(athlet);
+  }
+
   /**
    * A list of the languages from the user's profile.
    * 
@@ -845,5 +1061,13 @@ public class User extends NamedFacebookType {
    */
   public List<NamedFacebookType> getLanguages() {
     return unmodifiableList(languages);
+  }
+
+  public boolean addLanguage(NamedFacebookType language) {
+    return languages.add(language);
+  }
+
+  public boolean removeLanguage(NamedFacebookType language) {
+    return languages.remove(language);
   }
 }

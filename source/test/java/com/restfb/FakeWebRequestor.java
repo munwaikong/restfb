@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Norbert Bartels.
+ * Copyright (c) 2010-2015 Norbert Bartels.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,35 +22,61 @@
 
 package com.restfb;
 
+import com.restfb.DefaultWebRequestor.HttpMethod;
 import java.io.IOException;
+
 import static java.net.HttpURLConnection.HTTP_OK;
 
 /**
- *
- * @author viego2
+ * Fake Web Requestor for unit tests.
  */
 public class FakeWebRequestor implements WebRequestor {
-  
-    @SuppressWarnings("unused")
-    private String savedUrl;
 
-    @Override
-    public Response executeGet(String url) throws IOException {
-        this.savedUrl = url;
-        return new Response(HTTP_OK, url);
-    }
+  private String savedUrl;
 
-    @Override
-    public Response executePost(String url, String parameters) throws IOException {
-        this.savedUrl = url;
-        return new Response(HTTP_OK, url);
-    }
+  private HttpMethod method;
 
-    @Override
-    public Response executePost(String url, String parameters, BinaryAttachment... binaryAttachments) throws IOException {
-        this.savedUrl = url;
-        return new Response(HTTP_OK, url);
-    }
-    
-    
+  @Override
+  public Response executeGet(String url) throws IOException {
+    this.savedUrl = url;
+    this.method = HttpMethod.GET;
+    return new Response(HTTP_OK, url);
+  }
+
+  @Override
+  public Response executePost(String url, String parameters) throws IOException {
+    this.savedUrl = url;
+    this.method = HttpMethod.POST;
+    return new Response(HTTP_OK, url);
+  }
+
+  @Override
+  public Response executePost(String url, String parameters, BinaryAttachment... binaryAttachments) throws IOException {
+    this.savedUrl = url;
+    this.method = HttpMethod.POST;
+    return new Response(HTTP_OK, url);
+  }
+
+  @Override
+  public Response executeDelete(String url) throws IOException {
+    this.savedUrl = url;
+    this.method = HttpMethod.DELETE;
+    return new Response(HTTP_OK, url);
+  }
+
+  /**
+   * get the used HTTP Method.
+   * @return HTTP Method as String
+   */
+  public String getMethod() {
+    return method.name();
+  }
+
+  /**
+   * get the called url.
+   * @return the called url as String
+   */
+  public String getSavedUrl() {
+    return savedUrl;
+  }
 }
