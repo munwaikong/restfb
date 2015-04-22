@@ -18,22 +18,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.restfb.types.setter;
+package com.restfb.types;
 
-import com.restfb.types.Video;
-import com.restfb.types.api.SetterGetterTestBase;
+import com.restfb.AbstractJsonMapperTests;
+import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
-public class VideoTest extends SetterGetterTestBase {
+public class VideoTest extends AbstractJsonMapperTests {
     
     @Test
-    public void test() {
-	Video obj = new Video();
-	addIgnoredField("rawUpdatedTime");
-	addIgnoredField("rawCreatedTime");
-	addIgnoredField("rawBackdatedTime");
-	addIgnoredField("rawScheduledPublishTime");
-	testInstance(obj);
+    public void checkV2_3_ThumbnailList() {
+	List<Video.Thumbnail> thumbnailList = createJsonMapper().toJavaList(jsonFromClasspath("v2_3/video-thumbnails"), Video.Thumbnail.class);
+	assertEquals(10, thumbnailList.size());
+	for (Video.Thumbnail thumbnail : thumbnailList) {
+	    assertEquals(null, thumbnail.getName());
+	    assertEquals(302, thumbnail.getHeight().intValue());
+	    assertEquals(403, thumbnail.getWidth().intValue());
+	    assertEquals(1, thumbnail.getScale().intValue());
+	    assertTrue(thumbnail.getUri().contains("akamaihd.net"));
+	    assertNotNull(thumbnail.getIsPreferred());
+	}
     }
-    	    
+    
 }

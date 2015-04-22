@@ -28,7 +28,6 @@ import static com.restfb.util.StringUtils.isBlank;
 import static com.restfb.util.StringUtils.join;
 import static com.restfb.util.StringUtils.toBytes;
 import static com.restfb.util.StringUtils.toInteger;
-import static com.restfb.util.StringUtils.trimToEmpty;
 import static com.restfb.util.StringUtils.trimToNull;
 import static com.restfb.util.UrlUtils.urlEncode;
 import static java.lang.String.format;
@@ -38,10 +37,12 @@ import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
+import static java.net.HttpURLConnection.HTTP_NOT_MODIFIED;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -68,6 +69,7 @@ import com.restfb.exception.FacebookSignedRequestVerificationException;
 import com.restfb.json.JsonArray;
 import com.restfb.json.JsonException;
 import com.restfb.json.JsonObject;
+import com.restfb.scope.ScopeBuilder;
 import com.restfb.util.StringUtils;
 
 /**
@@ -90,6 +92,8 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
    * Knows how to map Graph API exceptions to formal Java exception types.
    */
   protected FacebookExceptionMapper graphFacebookExceptionMapper;
+
+  protected static final String FACEBOOK_ENDPOINT_URL = "https://www.facebook.com";
 
   /**
    * API endpoint URL.
@@ -341,8 +345,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
     this.apiVersion = (null == apiVersion) ? Version.UNVERSIONED : apiVersion;
     graphFacebookExceptionMapper = createGraphFacebookExceptionMapper();
 
-    illegalParamNames.addAll(Arrays
-      .asList(new String[] { ACCESS_TOKEN_PARAM_NAME, METHOD_PARAM_NAME, FORMAT_PARAM_NAME }));
+    illegalParamNames.addAll(Arrays.asList(ACCESS_TOKEN_PARAM_NAME, METHOD_PARAM_NAME, FORMAT_PARAM_NAME));
   }
 
   /**
@@ -563,6 +566,21 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
         parametersWithAdditionalParameter(Parameter.with(FQL_QUERY_PARAM_NAME, query), parameters)), objectType);
   }
 
+  @Override
+  public String getLogoutUrl(String next) {
+    Parameter p = null;
+    String parameterString;
+    if (next != null) {
+      p = Parameter.with("next", next);
+      parameterString = toParameterString(false, p);
+    } else {
+      parameterString = toParameterString(false);
+    }
+
+    final String fullEndPoint = createEndpointForApiCall("logout.php", false);
+    return fullEndPoint + "?" + parameterString;
+  }
+
   /**
    * @see com.restfb.FacebookClient#executeFqlMultiquery(java.util.Map, java.lang.Class, com.restfb.Parameter[])
    */
@@ -679,7 +697,8 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
   }
 
   /**
-   * @see com.restfb.FacebookClient#obtainUserAccessToken(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+   * @see com.restfb.FacebookClient#obtainUserAccessToken(java.lang.String, java.lang.String, java.lang.String,
+   *      java.lang.String)
    */
   @Override
   public AccessToken obtainUserAccessToken(String appId, String appSecret, String redirectUri, String verificationCode) {
@@ -795,6 +814,21 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
     return signedRequestToken.replace("-", "+").replace("_", "/").trim();
   }
 
+  @Override
+  public String getLoginDialogUrl(String appId, String redirectUri, ScopeBuilder scope) {
+    verifyParameterPresence("appId", appId);
+    verifyParameterPresence("redirectUri", redirectUri);
+    verifyParameterPresence("scope", scope);
+
+    String dialogUrl = FACEBOOK_ENDPOINT_URL + "/dialog/oauth";
+
+    Parameter clientId = Parameter.with("client_id", appId);
+    Parameter redirectUriParameter = Parameter.with("redirect_uri", redirectUri);
+    Parameter scopeParam = Parameter.with("scope", scope.toString());
+
+    return dialogUrl + "?" + toParameterString(false, clientId, redirectUriParameter, scopeParam);
+  }
+
   /**
    * Verifies that the signed request is really from Facebook.
    * 
@@ -906,8 +940,6 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
       parameters = parametersWithAdditionalParameter(Parameter.with(METHOD_PARAM_NAME, "delete"), parameters);
     }
 
-    trimToEmpty(endpoint).toLowerCase();
-
     if (!endpoint.startsWith("/"))
       endpoint = "/" + endpoint;
 
@@ -923,8 +955,11 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
         if (executeAsDelete && !isHttpDeleteFallback()) {
           return webRequestor.executeDelete(fullEndpoint + "?" + parameterString);
         } else {
-          return executeAsPost ? webRequestor.executePost(fullEndpoint, parameterString,
-            binaryAttachments == null ? null : binaryAttachments.toArray(new BinaryAttachment[] {})) : webRequestor
+          return executeAsPost ? webRequestor.executePost(
+            fullEndpoint,
+            parameterString,
+            binaryAttachments == null ? null
+                : binaryAttachments.toArray(new BinaryAttachment[binaryAttachments.size()])) : webRequestor
             .executeGet(fullEndpoint + "?" + parameterString);
         }
       }
@@ -940,7 +975,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
     verifyParameterPresence("appSecret", appSecret);
 
     try {
-      byte[] key = appSecret.getBytes();
+      byte[] key = appSecret.getBytes(Charset.forName("UTF-8"));
       SecretKeySpec signingKey = new SecretKeySpec(key, "HmacSHA256");
       Mac mac = Mac.getInstance("HmacSHA256");
       mac.init(signingKey);
@@ -988,11 +1023,12 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
 
     // If we get any HTTP response code other than a 200 OK or 400 Bad Request
     // or 401 Not Authorized or 403 Forbidden or 404 Not Found or 500 Internal
-    // Server Error,
+    // Server Error or 302 Not Modified
     // throw an exception.
     if (HTTP_OK != response.getStatusCode() && HTTP_BAD_REQUEST != response.getStatusCode()
         && HTTP_UNAUTHORIZED != response.getStatusCode() && HTTP_NOT_FOUND != response.getStatusCode()
-        && HTTP_INTERNAL_ERROR != response.getStatusCode() && HTTP_FORBIDDEN != response.getStatusCode())
+        && HTTP_INTERNAL_ERROR != response.getStatusCode() && HTTP_FORBIDDEN != response.getStatusCode()
+        && HTTP_NOT_MODIFIED != response.getStatusCode())
       throw new FacebookNetworkException("Facebook request failed", response.getStatusCode());
 
     String json = response.getBody();
@@ -1051,7 +1087,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
 
       JsonObject errorObject = new JsonObject(json);
 
-      if (errorObject == null || !errorObject.has(ERROR_ATTRIBUTE_NAME))
+      if (!errorObject.has(ERROR_ATTRIBUTE_NAME))
         return;
 
       JsonObject innerErrorObject = errorObject.getJsonObject(ERROR_ATTRIBUTE_NAME);
@@ -1065,7 +1101,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
             .getString(ERROR_SUBCODE_ATTRIBUTE_NAME)) : null;
 
       throw graphFacebookExceptionMapper.exceptionForTypeAndMessage(errorCode, errorSubcode, httpStatusCode,
-        innerErrorObject.getString(ERROR_TYPE_ATTRIBUTE_NAME),
+        innerErrorObject.optString(ERROR_TYPE_ATTRIBUTE_NAME),
         innerErrorObject.getString(ERROR_MESSAGE_ATTRIBUTE_NAME),
         innerErrorObject.optString(ERROR_USER_TITLE_ATTRIBUTE_NAME),
         innerErrorObject.optString(ERROR_USER_MSG_ATTRIBUTE_NAME));
@@ -1173,6 +1209,22 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
    *           If an error occurs when building the parameter string.
    */
   protected String toParameterString(Parameter... parameters) {
+      return toParameterString(true, parameters);
+  }
+  
+  
+  /**
+   * Generate the parameter string to be included in the Facebook API request.
+   * 
+   * @param withJsonParameter
+   *	      add additional parameter format with type json
+   * @param parameters
+   *          Arbitrary number of extra parameters to include in the request.
+   * @return The parameter string to include in the Facebook API request.
+   * @throws FacebookJsonMappingException
+   *           If an error occurs when building the parameter string.
+   */
+  protected String toParameterString(boolean withJsonParameter, Parameter... parameters) {
     if (!isBlank(accessToken))
       parameters = parametersWithAdditionalParameter(Parameter.with(ACCESS_TOKEN_PARAM_NAME, accessToken), parameters);
 
@@ -1181,8 +1233,10 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
           parametersWithAdditionalParameter(
             Parameter.with(APP_SECRET_PROOF_PARAM_NAME, obtainAppSecretProof(accessToken, appSecret)), parameters);
 
-    parameters = parametersWithAdditionalParameter(Parameter.with(FORMAT_PARAM_NAME, "json"), parameters);
-
+    if (withJsonParameter) {
+	parameters = parametersWithAdditionalParameter(Parameter.with(FORMAT_PARAM_NAME, "json"), parameters);
+    }
+	
     StringBuilder parameterStringBuilder = new StringBuilder();
     boolean first = true;
 
@@ -1205,16 +1259,18 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
    */
   @Override
   protected String createEndpointForApiCall(String apiCall, boolean hasAttachment) {
-    trimToEmpty(apiCall).toLowerCase();
     while (apiCall.startsWith("/"))
       apiCall = apiCall.substring(1);
 
     String baseUrl = getFacebookGraphEndpointUrl();
 
-    if (readOnlyApiCalls.contains(apiCall))
+    if (readOnlyApiCalls.contains(apiCall)) {
       baseUrl = getFacebookReadOnlyEndpointUrl();
-    else if (hasAttachment && apiCall.endsWith("/videos"))
+    } else if (hasAttachment && (apiCall.endsWith("/videos") || apiCall.endsWith("/advideos"))) {
       baseUrl = getFacebookGraphVideoEndpointUrl();
+    } else if (apiCall.endsWith("logout.php")) {
+      baseUrl = FACEBOOK_ENDPOINT_URL;
+    }
 
     return format("%s/%s", baseUrl, apiCall);
   }

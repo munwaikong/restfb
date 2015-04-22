@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010-2015 Norbert Bartels
+ * Copyright (c) 2010-2015 Mark Allen.
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -18,22 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.restfb.types.setter;
 
-import com.restfb.types.Video;
-import com.restfb.types.api.SetterGetterTestBase;
-import org.junit.Test;
+package com.restfb.scope;
 
-public class VideoTest extends SetterGetterTestBase {
+
+interface FacebookPermissions {
     
-    @Test
-    public void test() {
-	Video obj = new Video();
-	addIgnoredField("rawUpdatedTime");
-	addIgnoredField("rawCreatedTime");
-	addIgnoredField("rawBackdatedTime");
-	addIgnoredField("rawScheduledPublishTime");
-	testInstance(obj);
-    }
-    	    
+    public String getPermissionString();
 }

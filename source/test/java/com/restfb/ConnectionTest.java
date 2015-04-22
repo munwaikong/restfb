@@ -20,6 +20,7 @@
  */
 package com.restfb;
 
+import com.restfb.types.NamedFacebookType;
 import com.restfb.types.User;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -43,4 +44,5 @@ public class ConnectionTest extends AbstractJsonMapperTests {
         Connection<User> con = new Connection<User>(new DefaultFacebookClient(), jsonFromClasspath("v2_1/connection-user-friends"), User.class);
         assertEquals(99L, con.getTotalCount().longValue());
     }
+    
 }

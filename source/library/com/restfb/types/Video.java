@@ -31,6 +31,7 @@ import java.util.List;
 import com.restfb.Facebook;
 import com.restfb.JsonMapper.JsonMappingCompleted;
 import static com.restfb.util.DateUtils.toDateFromLongFormat;
+import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -125,11 +126,49 @@ public class Video extends NamedFacebookType {
   @Facebook
   private Integer length;
 
+  /**
+   * Whether a post about this video is published.
+   * 
+   * This field is only accessible in Graph API 2.3 or later.
+   * 
+   * @return whether a post about this video is published.
+   * @since 1.10.0
+   */
+  @Getter
+  @Setter
+  @Facebook
+  private Boolean published;
+  
+  /**
+   * Back dated time
+   *
+   * @since 1.10.0
+   */
+  @Getter
+  @Setter
+  private Date backdatedTime;
+  
+  /**
+   * String that represents the back dated time granularity
+   *
+   * @since 1.10.0
+   */
+  @Getter
+  @Setter
+  @Facebook("backdated_time_granularity")
+  private String backdatedTimeGranularity;
+  
+  @Facebook("backdated_time")
+  private String rawBackdatedTime;
+
   @Facebook("created_time")
   private String rawCreatedTime;
 
   @Facebook("updated_time")
   private String rawUpdatedTime;
+
+  @Facebook("scheduled_publish_time")
+  private String rawScheduledPublishTime;
 
   /**
    * The time the video was initially published.
@@ -148,6 +187,18 @@ public class Video extends NamedFacebookType {
   @Getter
   @Setter
   private Date updatedTime;
+
+  /**
+   * The time that the video is scheduled to expire.
+   * 
+   * This field is only accessible in Graph API 2.3 or later.
+   * 
+   * @return The time that the video is scheduled to expire.
+   * @since 1.10.0
+   */
+  @Getter
+  @Setter
+  private Date scheduledPublishTime;
 
   @Facebook
   private List<NamedFacebookType> tags = new ArrayList<NamedFacebookType>();
@@ -196,5 +247,64 @@ public class Video extends NamedFacebookType {
   void convertTime() {
     createdTime = toDateFromLongFormat(rawCreatedTime);
     updatedTime = toDateFromLongFormat(rawUpdatedTime);
+    backdatedTime = toDateFromLongFormat(rawBackdatedTime);
+    scheduledPublishTime = toDateFromLongFormat(rawScheduledPublishTime);
+  }
+
+  /**
+   * Represents the <a href="https://developers.facebook.com/docs/graph-api/reference/video-thumbnail/">Video Thumbnail
+   * Graph API type</a>.
+   * 
+   * @since 1.10.0
+   */
+  public static class Thumbnail implements Serializable {
+
+    /**
+     * The name of the thumbnail
+     */
+    @Getter
+    @Setter
+    @Facebook
+    private String name;
+
+    /**
+     * The height of the thumbnail
+     */
+    @Getter
+    @Setter
+    @Facebook
+    private Integer height;
+
+    /**
+     * The width of the thumbnail
+     */
+    @Getter
+    @Setter
+    @Facebook
+    private Integer width;
+
+    /**
+     * The scale of the thumbnail
+     */
+    @Getter
+    @Setter
+    @Facebook
+    private Float scale;
+
+    /**
+     * The uri of the thumbnail
+     */
+    @Getter
+    @Setter
+    @Facebook
+    private String uri;
+
+    /**
+     * Whether this is the preferred thumbnail for the video
+     */
+    @Getter
+    @Setter
+    @Facebook("is_preferred")
+    private Boolean isPreferred;
   }
 }

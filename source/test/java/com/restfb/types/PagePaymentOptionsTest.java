@@ -18,22 +18,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.restfb.types.setter;
 
-import com.restfb.types.Video;
-import com.restfb.types.api.SetterGetterTestBase;
+package com.restfb.types;
+
+import com.restfb.AbstractJsonMapperTests;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
-public class VideoTest extends SetterGetterTestBase {
+public class PagePaymentOptionsTest extends AbstractJsonMapperTests {
     
     @Test
-    public void test() {
-	Video obj = new Video();
-	addIgnoredField("rawUpdatedTime");
-	addIgnoredField("rawCreatedTime");
-	addIgnoredField("rawBackdatedTime");
-	addIgnoredField("rawScheduledPublishTime");
-	testInstance(obj);
+    public void convertPaymentOptions() {
+	Page.PagePaymentOptions paymentOptions =
+        createJsonMapper().toJavaObject(jsonFromClasspath("v2_3/page-paymentoptions"), Page.PagePaymentOptions.class);
+	assertFalse(paymentOptions.getAmex());
+	assertTrue(paymentOptions.getCashOnly());
+	assertFalse(paymentOptions.getDiscover());
+	assertTrue(paymentOptions.getMastercard());
+	assertTrue(paymentOptions.getVisa());
     }
-    	    
 }

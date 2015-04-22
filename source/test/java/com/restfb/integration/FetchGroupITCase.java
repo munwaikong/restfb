@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010-2015 Norbert Bartels
+ * Copyright (c) 2010-2015 Norbert Bartels.
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -18,22 +19,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.restfb.types.setter;
 
-import com.restfb.types.Video;
-import com.restfb.types.api.SetterGetterTestBase;
+package com.restfb.integration;
+
+import com.restfb.Connection;
+import com.restfb.DefaultFacebookClient;
+import com.restfb.Version;
+import com.restfb.integration.base.RestFbIntegrationTestBase;
+import com.restfb.types.Group;
+import java.util.List;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
-public class VideoTest extends SetterGetterTestBase {
-    
-    @Test
-    public void test() {
-	Video obj = new Video();
-	addIgnoredField("rawUpdatedTime");
-	addIgnoredField("rawCreatedTime");
-	addIgnoredField("rawBackdatedTime");
-	addIgnoredField("rawScheduledPublishTime");
-	testInstance(obj);
+public class FetchGroupITCase extends RestFbIntegrationTestBase {
+
+  @Test
+  public void fetchGroup() {
+    DefaultFacebookClient client =
+        new DefaultFacebookClient(getTestSettings().getUserAccessToken(), Version.VERSION_2_3);
+    Connection<Group> connection = client.fetchConnection("/me/groups", Group.class);
+    for (List<Group> groupList : connection) {
+      for (Group group : groupList) {
+        assertNotNull(group.getName());
+      }
     }
-    	    
+  }
 }

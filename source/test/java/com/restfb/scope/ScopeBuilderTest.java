@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010-2015 Norbert Bartels
+ * Copyright (c) 2010-2015 Mark Allen.
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -18,22 +19,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.restfb.types.setter;
 
-import com.restfb.types.Video;
-import com.restfb.types.api.SetterGetterTestBase;
+package com.restfb.scope;
+
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
-public class VideoTest extends SetterGetterTestBase {
-    
-    @Test
-    public void test() {
-	Video obj = new Video();
-	addIgnoredField("rawUpdatedTime");
-	addIgnoredField("rawCreatedTime");
-	addIgnoredField("rawBackdatedTime");
-	addIgnoredField("rawScheduledPublishTime");
-	testInstance(obj);
-    }
-    	    
+public class ScopeBuilderTest {
+
+  @Test
+  public void noPermission() {
+    ScopeBuilder s = new ScopeBuilder();
+    assertEquals("public_profile", s.toString());
+  }
+
+  @Test
+  public void noPublicProfilePermission() {
+    ScopeBuilder s = new ScopeBuilder(true);
+    assertEquals("", s.toString());
+  }
+
+  @Test
+  public void singlePermission() {
+    ScopeBuilder s = new ScopeBuilder();
+    s.addPermission(UserDataPermissions.USER_STATUS);
+    assertEquals("public_profile,user_status", s.toString());
+  }
+
+  @Test
+  public void twoPermissions() {
+    ScopeBuilder s = new ScopeBuilder();
+    s.addPermission(UserDataPermissions.USER_STATUS);
+    s.addPermission(UserDataPermissions.USER_ABOUT_ME);
+    assertEquals("public_profile,user_status,user_about_me", s.toString());
+  }
+
 }

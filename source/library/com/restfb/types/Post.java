@@ -292,6 +292,19 @@ public class Post extends NamedFacebookType {
   @Setter
   @Facebook
   private Shares shares;
+  
+  /**
+   * ID of admin who created the post. 
+   * 
+   * Applies to pages only
+   * 
+   * @return ID of admin who created the post.
+   * @since 1.10.0
+   */
+  @Getter
+  @Setter
+  @Facebook("admin_creator")
+  private NamedFacebookType adminCreator;
 
   private static final long serialVersionUID = 3L;
 
@@ -313,7 +326,7 @@ public class Post extends NamedFacebookType {
       return;
 
     for (String key : getNames(rawMessageTags)) {
-      String messageTagJson = rawMessageTags.getString(key).toString();
+      String messageTagJson = rawMessageTags.getString(key);
       messageTags.put(key, jsonMapper.toJavaList(messageTagJson, MessageTag.class));
     }
   }
@@ -411,6 +424,30 @@ public class Post extends NamedFacebookType {
     @Setter
     @Facebook
     private String href;
+    
+    /**
+     * If this post is marked as hidden (applies to Pages only).
+     * 
+     * @since 1.10.0
+     * @return if this post is marked as hidden
+     */
+    @Getter
+    @Setter
+    @Facebook("is_hidden")
+    private Boolean isHidden;
+    
+    /**
+     * Indicates whether a scheduled post was published. 
+     * (applies to scheduled Page Post only, for users post and 
+     * instanlty published posts this value is always <code>true</code>)
+     * 
+     * @since 1.10.0
+     * @return indicates whether a scheduled post was published
+     */
+    @Getter
+    @Setter
+    @Facebook("is_published")
+    private Boolean isPublished;
 
     private static final long serialVersionUID = 1L;
 
